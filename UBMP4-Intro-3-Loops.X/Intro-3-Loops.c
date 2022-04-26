@@ -68,19 +68,26 @@ int main(void)
  * 1. The main part of the program contains the 'while(1)' loop. What condition
  *    is being evaluated within its brackets? (Hint: Think about the Boolean
  *    variables from Activity 2-Variables.) How many times will this loop run?
- * 
+ *  The main part of the program is evaluating nothing, because there are no variables, only the number 1.
+ * This loop will run forever.
+
  * 2. There is a second 'while(PWMperiod != 0)' loop inside the first while
  *    loop. What condition is being evaluated inside this while statement's
  *    brackets? How many times will the contents of this inner loop run?
- * 
+ *  The second loop is evaluating if PWMperiod is not equal to 0.
+ * The loop will continue until PWMperiod is 0, then it will stop.
  * 3. What condition is being evaluated by the if statement inside the loop?
  *    What happens when the if condition is true?
- * 
+
+ * The condition that is being evaluated in the if statement is if the TonLED4 is equal to PWMperiod.
+ *  If the condition is true, it turns on LED4.
+
  * 4. Pressing the up or down buttons (SW3 and SW2) will increase or decrease
  *    the brightness of LED D4 using PWM (Pulse-Width Modulation). How many 
  *    different brightnesses can the LED have? What would the step size of one
  *    brightness level change be if it was expressed as a percentage?
- * 
+ *  There up to 255 different light levels available. The step size of one level as a percentage is about 0.39%.
+
  * 5. The while loop needs three statements to perform its function. First, the
  *    assignment statement 'PWMperiod = 255;' sets the PWMperiod variable. Next,
  *    the condition 'while(PWMperiod != 0)' runs the contents of the loop code
