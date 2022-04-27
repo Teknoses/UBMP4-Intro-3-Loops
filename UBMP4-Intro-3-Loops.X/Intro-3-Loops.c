@@ -22,7 +22,7 @@
 unsigned char TonLED4 = 127;    // LED brightness PWM value
 unsigned char PWMperiod;        // PWM period counter for PWM loops
 unsigned int period = 460;      // Sound period value for later activities
-
+unsigned char Finished = 0;
 int main(void)
 {
     OSC_config();               // Configure internal oscillator for 48 MHz
@@ -41,20 +41,35 @@ int main(void)
         {
             TonLED4 += 1;
         }
-        
-        // PWM LED4 brightness
-        PWMperiod = 255;
-        while(PWMperiod != 0)
+        if(TonLED4 == 255)
+        {
+            LED6 = 1;
+        }
+        else
+        {
+            LED6 = 0;
+        }
+        //Program Analysis 5
+          PWMperiod = 128;
+           if(PWMperiod == 128)
+        {
+            LED5 = 1;
+        }
+        else
+        {
+            LED5 = 0;
+        }
+      // PWM LED4 brightness
+        for(unsigned char PWMperiod = 255; PWMperiod != 0; PWMperiod --)
         {
             if(TonLED4 == PWMperiod)
             {
                 LED4 = 1;
             }
-            PWMperiod --;
             __delay_us(20);
         }
         LED4 = 0;
-        
+ 
         // Activate bootloader if SW1 is pressed.
         if(SW1 == 0)
         {
@@ -116,7 +131,7 @@ int main(void)
         LED4 = 0;
         
  *    What is an advantage of using a for loop instead of a while loop?
- * 
+ * An advangtage of using a for loop is that you keep track of how to stop the loop, saving lines of code, and the value given to the variable is only given to the variable inside of the loop.
  * 6. The 'for' loop, above, redefines the PWMperiod variable in the 
  *    initialization statement: 'for(unsigned char PWMperiod = 255; ...'
  * 
@@ -144,10 +159,11 @@ int main(void)
  *    Compile and run the code. When the program runs, the PWMperiod variable
  *    inside the for loop will count down from 255 to 0, and should be 0 when
  *    the loop finishes. Is LED D5 lit? What must the value of PWMperiod be?
- * 
+ *  LED D5 is lit the whole time, making the value PWMperiod outside of the for loop be 128
+
  *    Can you remove the global PWMperiod variable definition from the top of 
  *    the program now that PWMperiod is being defined in the for loop?
- * 
+ * No because if you remove that, the first line that requires PWMperiod will not know what PWMperiod is because it is not definied.
  * 7. Add this code below the PWM loop to generate a tone:
                 
         // Change pitch
