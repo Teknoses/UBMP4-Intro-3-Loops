@@ -22,7 +22,7 @@
 unsigned char TonLED4 = 127;    // LED brightness PWM value
 unsigned char PWMperiod;        // PWM period counter for PWM loops
 unsigned int period = 460;      // Sound period value for later activities
-unsigned char Finished = 0;
+unsigned char TonLED5 = 127;
 int main(void)
 {
     OSC_config();               // Configure internal oscillator for 48 MHz
@@ -30,18 +30,50 @@ int main(void)
 	
     while(1)
 	{
-        // Decrease brightness
+        /* 
+        // Decrease brightness (LED4)
         if(SW2 == 0)
         {
-            TonLED4 -= 1;
+            if(TonLED4 > 0)
+            {
+                TonLED4 -= 1;
+            }
         }
 
         // Increase brightness
         if(SW3 == 0)
         {
-            TonLED4 += 1;
+            if(TonLED4 < 255)
+            {
+                TonLED4 += 1;
+            }
         }
         if(TonLED4 == 255)
+        {
+            LED3 = 1;
+        }
+        else
+        {
+            LED3 = 0;
+        }
+       // Decrease brightness (LED5)
+        if(SW5 == 0)
+        {
+            if(TonLED5 > 0)
+            {
+                TonLED5 --;
+            }
+        }
+
+        // Increase brightness
+        if(SW4 == 0)
+        {
+            if(TonLED5 < 255)
+            {
+                TonLED5 ++;
+            }
+        }
+        if(TonLED5 == 255)
         {
             LED6 = 1;
         }
@@ -49,27 +81,39 @@ int main(void)
         {
             LED6 = 0;
         }
-        //Program Analysis 5
-          PWMperiod = 128;
-           if(PWMperiod == 128)
-        {
-            LED5 = 1;
-        }
-        else
-        {
-            LED5 = 0;
-        }
-      // PWM LED4 brightness
+     // PWM LED4 brightness
         for(unsigned char PWMperiod = 255; PWMperiod != 0; PWMperiod --)
         {
             if(TonLED4 == PWMperiod)
             {
                 LED4 = 1;
             }
+            if(TonLED5 == PWMperiod)
+            {
+                LED5 = 1;
+            }
             __delay_us(20);
         }
         LED4 = 0;
- 
+        LED5 = 0;
+        */
+        // Change pitch
+        if(SW4 == 0)
+        {
+            period -= 1;
+        }
+        
+        if(SW5 == 0)
+        {
+            period += 1;
+        }
+        
+        // Make a tone
+        for(unsigned char cycles = 50; cycles != 0; cycles--)
+        {
+            BEEPER = !BEEPER;
+            for(unsigned int period; period != 0; period --);
+        }
         // Activate bootloader if SW1 is pressed.
         if(SW1 == 0)
         {
@@ -159,7 +203,7 @@ int main(void)
  *    Compile and run the code. When the program runs, the PWMperiod variable
  *    inside the for loop will count down from 255 to 0, and should be 0 when
  *    the loop finishes. Is LED D5 lit? What must the value of PWMperiod be?
- *  LED D5 is lit the whole time, making the value PWMperiod outside of the for loop be 128
+ *  LED D5 is lit the whole time, making the value PWMperiod outside of the loop be 128
 
  *    Can you remove the global PWMperiod variable definition from the top of 
  *    the program now that PWMperiod is being defined in the for loop?
@@ -181,7 +225,7 @@ int main(void)
         for(unsigned char cycles = 50; cycles != 0; cycles--)
         {
             BEEPER = !BEEPER;
-            for(unsigned int p = period; p != 0; p--);
+            for(unsigned int p = period; p != 0; p --);
         }
 
  *    The section to make a tone contains nested for loops. The outer loop 
@@ -193,10 +237,12 @@ int main(void)
  *    to zero, increasing the time delay until the next cycle.
  * 
  *    What variable type is period? How large a number can this variable hold?
- * 
+ *  The variable period is a integer variable. It can hold any number less than 2^16, or less than to 65536.
  * 8. Why is period copied to the local variable p inside the inner for loop?
  *    What would happen if the actual period variable was decremented instead?
- * 
+ * If the actual period was decreased instead of its local p variable, the tone makes no noise because period inside of the loop when the program starts. 
+ Decreased to 0, then after the loop will no longer work since period is 0. 
+ The end result is the tone is never played.
  * Programming Activities
  * 
  * 1. Pressing and holding SW2 or SW3 causes the brightness of LED D4 to cycle
@@ -205,13 +251,113 @@ int main(void)
  *    pressing and holding SW3 will brighten the LED and keep it at maximum
  *    brightness.
  * 
+  if(SW2 == 0)
+        {
+            if(TonLED4 > 0)
+            {
+                TonLED4 -= 1;
+            }
+        }
+
+        // Increase brightness
+        if(SW3 == 0)
+        {
+            if(TonLED4 < 255)
+            {
+                TonLED4 += 1;
+            }
+        }
+        if(TonLED4 == 255)
+        {
+            LED6 = 1;
+        }
+        else
+        {
+            LED6 = 0;
+        }
+     for(unsigned char PWMperiod = 255; PWMperiod != 0; PWMperiod --)
+        {
+            if(TonLED4 == PWMperiod)
+            {
+                LED4 = 1;
+            }
+            __delay_us(20);
+        }
+        LED4 = 0;
  * 2. Modify your program to control the brightness of LED D5 using SW4 and SW5
  *    while using SW3 and SW2 to control LED D4. Hint: To ensure each LED can
  *    reach maximum brightness (100% PWM on-time), you'll have to perform both
  *    PWM functions in the same loop. You can see the resulting PWM wave if you
  *    have access to an oscilloscope. If not, just light the other two LEDs and 
  *    compare the brightness of LEDs D4 and D5 to them.
- * 
+ *         
+ // Decrease brightness (LED4)
+        if(SW2 == 0)
+        {
+            if(TonLED4 > 0)
+            {
+                TonLED4 -= 1;
+            }
+        }
+
+        // Increase brightness (LED4)
+        if(SW3 == 0)
+        {
+            if(TonLED4 < 255)
+            {
+                TonLED4 += 1;
+            }
+        }
+       //Check For Maximum Brightness (LED4)
+        if(TonLED4 == 255)
+        {
+            LED3 = 1;
+        }
+        else
+        {
+            LED3 = 0;
+        }
+       // Decrease brightness (LED5)
+        if(SW5 == 0)
+        {
+            if(TonLED5 > 0)
+            {
+                TonLED5 --;
+            }
+        }
+
+        // Increase brightness
+        if(SW4 == 0)
+        {
+            if(TonLED5 < 255)
+            {
+                TonLED5 ++;
+            }
+        }
+    //Check For Maximum Brightness (LED5)
+        if(TonLED5 == 255)
+        {
+            LED6 = 1;
+        }
+        else
+        {
+            LED6 = 0;
+        }
+     // PWM LED4/LED5 brightness
+        for(unsigned char PWMperiod = 255; PWMperiod != 0; PWMperiod --)
+        {
+            if(TonLED4 == PWMperiod)
+            {
+                LED4 = 1;
+            }
+            if(TonLED5 == PWMperiod)
+            {
+                LED5 = 1;
+            }
+            __delay_us(20);
+        }
+        LED4 = 0;
+        LED5 = 0;
  * 3. Rather than having lights suddenly turn on at full brightness, or motors
  *    turn on at full power, create a program that uses a for loop and your PWM
  *    code to make a 'soft-start' program that slowly increases the PWM on-time
