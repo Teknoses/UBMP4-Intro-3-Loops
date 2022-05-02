@@ -19,10 +19,10 @@
 // TODO Set linker code offset to '800' under "Additional options" pull-down.
 
 // Program variable definitions
-unsigned char TonLED4 = 127;    // LED brightness PWM value
+unsigned char TonLED4 = 255;    // LED4 brightness PWM value
 unsigned char PWMperiod;        // PWM period counter for PWM loops
-unsigned int period = 460;      // Sound period value for later activities
-unsigned char TonLED5 = 127;
+unsigned char Toggle = true;
+unsigned int period = 1000; 
 int main(void)
 {
     OSC_config();               // Configure internal oscillator for 48 MHz
@@ -30,90 +30,20 @@ int main(void)
 	
     while(1)
 	{
-        /* 
-        // Decrease brightness (LED4)
-        if(SW2 == 0)
-        {
-            if(TonLED4 > 0)
-            {
-                TonLED4 -= 1;
-            }
-        }
-
-        // Increase brightness
+        // Change pitch
+        // Make a tone
         if(SW3 == 0)
         {
-            if(TonLED4 < 255)
-            {
-                TonLED4 += 1;
-            }
+            for(unsigned int cycles = 500; cycles != 0; cycles--) //length of time 
+                {
+                period ++;
+                BEEPER = !BEEPER;
+                for(unsigned int p = period; p != 0; p --); //pitch
+                }
         }
-        if(TonLED4 == 255)
-        {
-            LED3 = 1;
-        }
-        else
-        {
-            LED3 = 0;
-        }
-       // Decrease brightness (LED5)
-        if(SW5 == 0)
-        {
-            if(TonLED5 > 0)
-            {
-                TonLED5 --;
-            }
-        }
+        period = 1000;
 
-        // Increase brightness
-        if(SW4 == 0)
-        {
-            if(TonLED5 < 255)
-            {
-                TonLED5 ++;
-            }
-        }
-        if(TonLED5 == 255)
-        {
-            LED6 = 1;
-        }
-        else
-        {
-            LED6 = 0;
-        }
-     // PWM LED4 brightness
-        for(unsigned char PWMperiod = 255; PWMperiod != 0; PWMperiod --)
-        {
-            if(TonLED4 == PWMperiod)
-            {
-                LED4 = 1;
-            }
-            if(TonLED5 == PWMperiod)
-            {
-                LED5 = 1;
-            }
-            __delay_us(20);
-        }
-        LED4 = 0;
-        LED5 = 0;
-        */
-        // Change pitch
-        if(SW4 == 0)
-        {
-            period -= 1;
-        }
         
-        if(SW5 == 0)
-        {
-            period += 1;
-        }
-        
-        // Make a tone
-        for(unsigned char cycles = 50; cycles != 0; cycles--)
-        {
-            BEEPER = !BEEPER;
-            for(unsigned int period; period != 0; period --);
-        }
         // Activate bootloader if SW1 is pressed.
         if(SW1 == 0)
         {
@@ -240,7 +170,7 @@ int main(void)
  *  The variable period is a integer variable. It can hold any number less than 2^16, or less than to 65536.
  * 8. Why is period copied to the local variable p inside the inner for loop?
  *    What would happen if the actual period variable was decremented instead?
- * If the actual period was decreased instead of its local p variable, the tone makes no noise because period inside of the loop when the program starts. 
+ * If the actual period was decreased instead of its local p variable, the tone makes no noise because period inside of the loop will be lowered to 0, and will never rise above 0 when the program starts, causing no noise. 
  Decreased to 0, then after the loop will no longer work since period is 0. 
  The end result is the tone is never played.
  * Programming Activities
@@ -251,6 +181,9 @@ int main(void)
  *    pressing and holding SW3 will brighten the LED and keep it at maximum
  *    brightness.
  * 
+unsigned char TonLED4 = 127;    // LED brightness PWM value
+unsigned char PWMperiod;        // PWM period counter for PWM loops
+  
   if(SW2 == 0)
         {
             if(TonLED4 > 0)
@@ -290,7 +223,10 @@ int main(void)
  *    PWM functions in the same loop. You can see the resulting PWM wave if you
  *    have access to an oscilloscope. If not, just light the other two LEDs and 
  *    compare the brightness of LEDs D4 and D5 to them.
- *         
+ *   
+unsigned char TonLED4 = 127;    // LED4 brightness PWM value
+unsigned char PWMperiod;        // PWM period counter for PWM loops
+unsigned char TonLED5 = 127;    // LED5 brightness PWM value  
  // Decrease brightness (LED4)
         if(SW2 == 0)
         {
@@ -362,10 +298,92 @@ int main(void)
  *    turn on at full power, create a program that uses a for loop and your PWM
  *    code to make a 'soft-start' program that slowly increases the PWM on-time
  *    when you press a button. Can you make it turn off in a similar way?
- * 
+ *    
+unsigned char TonLED4 = 255;    // LED4 brightness PWM value
+unsigned char PWMperiod;        // PWM period counter for PWM loops
+unsigned char Toggle = true;
+unsigned char Toggle2 = true;
+        //Decrease brightness
+        if(SW2 == 0)
+        {
+            Toggle = true;
+        }
+        if(Toggle == true)
+        {
+            if(TonLED4 > 0)
+            {
+                TonLED4 -= 1;
+            }
+            else
+            {
+                Toggle = false;
+            }
+        }
+        // Increase brightness
+        if(SW3 == 0)
+        {
+            Toggle2 = true;
+        }
+        if (Toggle2 == true)
+        {
+            if(TonLED4 < 255)
+            {
+                TonLED4 += 1;
+            }
+            else
+            {
+                Toggle2 = false;
+            }
+        }
+     // PWM LED brightness
+        for(unsigned char PWMperiod = 255; PWMperiod != 0; PWMperiod --)
+        {
+            if(TonLED4 == PWMperiod)
+            {
+                LED4 = 1;
+            }
+            __delay_us(20);
+        }
+        LED4 = 0;
  * 4. Make a program that creates an automated, electronic 'pulse', repeatedly
  *    brightening and dimming one or more LEDs.
- * 
+ *         
+unsigned char TonLED4 = 255;    // LED4 brightness PWM value
+unsigned char PWMperiod;        // PWM period counter for PWM loops
+unsigned char Toggle = true;
+        if(Toggle == true)
+        {
+            if(TonLED4 > 0)
+            {
+                TonLED4 -= 1;
+            }
+            else
+            {
+                Toggle = false;
+            }
+        }
+        // Increase brightness (LED4)
+        if (Toggle == false)
+        {
+            if(TonLED4 < 255)
+            {
+                TonLED4 += 1;
+            }
+            else
+            {
+                Toggle = true;
+            }
+        }
+     // PWM LED4/LED5 brightness
+        for(unsigned char PWMperiod = 255; PWMperiod != 0; PWMperiod --)
+        {
+            if(TonLED4 == PWMperiod)
+            {
+                LED4 = 1;
+            }
+            __delay_us(20);
+        }
+        LED4 = 0;
  * 5. Make a 'chirp' or 'pew-pew' sound effect by sweeping through a range of
  *    frequencies when a button is pressed.
  */
