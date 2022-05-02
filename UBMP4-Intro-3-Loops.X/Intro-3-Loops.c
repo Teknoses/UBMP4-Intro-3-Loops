@@ -34,9 +34,15 @@ int main(void)
         // Make a tone
         if(SW3 == 0)
         {
-            for(unsigned int cycles = 500; cycles != 0; cycles--) //length of time 
+            for(unsigned int cycles = 100; cycles != 0; cycles--) //length of time 
                 {
-                period ++;
+                period = period + 10; //rate of increase of pitch
+                BEEPER = !BEEPER;
+                for(unsigned int p = period; p != 0; p --); //pitch
+                }
+             for(unsigned int cycles = 300; cycles != 0; cycles--) //length of time 
+                {
+                period = period - 5; //rate of decrease of pitch
                 BEEPER = !BEEPER;
                 for(unsigned int p = period; p != 0; p --); //pitch
                 }
