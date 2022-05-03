@@ -22,7 +22,7 @@
 unsigned char TonLED4 = 255;    // LED4 brightness PWM value
 unsigned char PWMperiod;        // PWM period counter for PWM loops
 unsigned char Toggle = true;
-unsigned int period = 1000; 
+unsigned int period = 1500; 
 int main(void)
 {
     OSC_config();               // Configure internal oscillator for 48 MHz
@@ -31,24 +31,7 @@ int main(void)
     while(1)
 	{
         // Change pitch
-        // Make a tone
-        if(SW3 == 0)
-        {
-            for(unsigned int cycles = 100; cycles != 0; cycles--) //length of time 
-                {
-                period = period + 10; //rate of increase of pitch
-                BEEPER = !BEEPER;
-                for(unsigned int p = period; p != 0; p --); //pitch
-                }
-             for(unsigned int cycles = 300; cycles != 0; cycles--) //length of time 
-                {
-                period = period - 5; //rate of decrease of pitch
-                BEEPER = !BEEPER;
-                for(unsigned int p = period; p != 0; p --); //pitch
-                }
-        }
-        period = 1000;
-
+ 
         
         // Activate bootloader if SW1 is pressed.
         if(SW1 == 0)
@@ -392,4 +375,35 @@ unsigned char Toggle = true;
         LED4 = 0;
  * 5. Make a 'chirp' or 'pew-pew' sound effect by sweeping through a range of
  *    frequencies when a button is pressed.
+ unsigned int period = 1500; 
+   if(SW3 == 0)
+        {
+            for(unsigned int cycles = 20; cycles != 0; cycles--) //length of time 
+                {
+                period = period + 50; //rate of increase of pitch
+                BEEPER = !BEEPER;
+                for(unsigned int p = period; p != 0; p --); //pitch
+                }
+             for(unsigned int cycles = 200; cycles != 0; cycles--) //length of time 
+                {
+                period = period - 10; //rate of decrease of pitch
+                BEEPER = !BEEPER;
+                for(unsigned int p = period; p != 0; p --); //pitch
+                }
+                period = 1500;
+            for(unsigned int cycles = 20; cycles != 0; cycles--) //length of time 
+                {
+                period = period + 50; //rate of increase of pitch
+                BEEPER = !BEEPER;
+                for(unsigned int p = period; p != 0; p --); //pitch
+                }
+             for(unsigned int cycles = 200; cycles != 0; cycles--) //length of time 
+                {
+                period = period - 10; //rate of decrease of pitch
+                BEEPER = !BEEPER;
+                for(unsigned int p = period; p != 0; p --); //pitch
+                }
+        }
+    period = 1500;
+        
  */
